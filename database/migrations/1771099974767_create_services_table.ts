@@ -16,8 +16,8 @@ export default class extends BaseSchema {
       table.string('name').notNullable()
       table.string('url').notNullable()
       table.boolean('is_active').defaultTo(true).index()
-      table.timestamp('created_at').notNullable().defaultTo(this.now)
-      table.timestamp('updated_at').notNullable().defaultTo(this.now)
+      table.timestamp('created_at').notNullable().defaultTo(this.now())
+      table.timestamp('updated_at').notNullable().defaultTo(this.now())
     })
   }
 
