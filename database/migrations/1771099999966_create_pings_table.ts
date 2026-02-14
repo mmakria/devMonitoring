@@ -6,9 +6,18 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-
-      table.timestamp('created_at')
-      table.timestamp('updated_at')
+      table
+        .integer('service_id')
+        .unsigned()
+        .references('id')
+        .inTable('services')
+        .notNullable()
+        .onDelete('CASCADE')
+      table.integer('status_code').unsigned().notNullable()
+      table.integer('response_time').unsigned().notNullable()
+      table.text('error_message').nullable()
+      table.timestamp('created_at').notNullable().defaultTo(this.now())
+      table.timestamp('updated_at').notNullable().defaultTo(this.now())
     })
   }
 
