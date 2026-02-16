@@ -5,13 +5,22 @@ import type { HttpContext } from '@adonisjs/core/http'
 export default class AuthController {
   async register({ request, response }: HttpContext) {
     const { email, password } = await request.validateUsing(registerValidation)
-    const user = await User.create({ email, password })
-    const token = await User.accessTokens.create(user)
 
-    return response.created({
-      user,
-      token,
-    })
+    try {
+      const user = await User.create({ email, password })
+      const token = await User.accessTokens.create(user)
+
+      return response.created({
+        user,
+        token,
+      })
+    } catch (error) {
+      console.log(error)
+      if (error.code === '23505') {
+        return response.conflict({ message: 'cette adresse mail est déja utilisé' })
+      }
+      return response.internalServerError({ message: 'Erreur serveur' })
+    }
   }
 
   async login({ request, response }: HttpContext) {
