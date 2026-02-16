@@ -11,10 +11,16 @@ import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 
 const AuthController = () => import('#controllers/auth_controller')
+const ServiceController = () => import('#controllers/service_controller')
 router
   .group(() => {
+    // Authentification
     router.post('/register', [AuthController, 'register'])
     router.post('/login', [AuthController, 'login'])
     router.post('/logout', [AuthController, 'logout']).use(middleware.auth())
+
+    // Services
+
+    router.get('/services', [ServiceController, 'index']).use(middleware.auth())
   })
   .prefix('/api')
