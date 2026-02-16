@@ -8,4 +8,15 @@ export default class ServiceController {
       services,
     })
   }
+
+  async destroy({ auth, response, params }: HttpContext) {
+    const service = await auth
+      .user!.related('services')
+      .query()
+      .where('id', params.id)
+      .firstOrFail()
+
+    await service.delete()
+    return response.noContent()
+  }
 }

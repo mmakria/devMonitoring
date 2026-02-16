@@ -17,10 +17,13 @@ router
     // Authentification
     router.post('/register', [AuthController, 'register'])
     router.post('/login', [AuthController, 'login'])
-    router.post('/logout', [AuthController, 'logout']).use(middleware.auth())
 
-    // Services
-
-    router.get('/services', [ServiceController, 'index']).use(middleware.auth())
+    router
+      .group(() => {
+        router.post('/logout', [AuthController, 'logout'])
+        router.get('/services', [ServiceController, 'index'])
+        router.delete('/services/:id', [ServiceController, 'destroy'])
+      })
+      .use(middleware.auth())
   })
   .prefix('/api')
