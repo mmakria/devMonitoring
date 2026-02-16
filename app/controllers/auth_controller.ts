@@ -12,4 +12,22 @@ export default class AuthController {
       token,
     })
   }
+
+  async login({ request, response }: HttpContext) {
+    const { email, password } = request.only(['email', 'password'])
+
+    try {
+      const user = await User.verifyCredentials(email, password)
+      const token = await User.accessTokens.create(user)
+      return response.ok({
+        user,
+        token,
+      })
+    } catch (error) {
+      console.log(error)
+      return response.forbidden({
+        message: 'Email ou password invalide',
+      })
+    }
+  }
 }
