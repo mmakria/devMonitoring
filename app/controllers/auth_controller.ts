@@ -4,10 +4,10 @@ import type { HttpContext } from '@adonisjs/core/http'
 
 export default class AuthController {
   async register({ request, response }: HttpContext) {
-    const { email, password } = await request.validateUsing(registerValidation)
+    const { fullName, email, password } = await request.validateUsing(registerValidation)
 
     try {
-      const user = await User.create({ email, password })
+      const user = await User.create({ fullName, email, password })
       const token = await User.accessTokens.create(user)
 
       return response.created({
