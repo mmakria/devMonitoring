@@ -1,11 +1,10 @@
 import { serviceValidation, updateServiceValidation } from '#validators/service'
 import type { HttpContext } from '@adonisjs/core/http'
-import { create } from 'domain'
 
 export default class ServiceController {
   async index({ auth, request, response }: HttpContext) {
-    const page = await request.input('page')
-    const services = await auth.user!.related('services').query().paginate(page, 10)
+    const page = request.input('page')
+    const services = await auth.getUserOrFail().related('services').query().paginate(page, 10)
     return response.ok({
       services,
     })
@@ -20,7 +19,7 @@ export default class ServiceController {
       return response.created(service)
     } catch (error) {
       return response.internalServerError({
-        message: 'une erreur est survenu lors de la création du service',
+        message: 'une erreur est survenue lors de la création du service',
       })
     }
   }
@@ -43,7 +42,8 @@ export default class ServiceController {
 
   async destroy({ auth, response, params }: HttpContext) {
     const service = await auth
-      .user!.related('services')
+      .getUserOrFail()
+      .related('services')
       .query()
       .where('id', params.id)
       .firstOrFail()
