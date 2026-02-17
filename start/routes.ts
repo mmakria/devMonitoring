@@ -24,6 +24,7 @@ router
         router.get('/services', [ServiceController, 'index'])
         router.delete('/services/:id', [ServiceController, 'destroy'])
         router.post('services', [ServiceController, 'store'])
+        router.patch('services/:id', [ServiceController, 'update'])
       })
       .use(middleware.auth())
   })

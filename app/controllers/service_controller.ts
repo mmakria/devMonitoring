@@ -1,4 +1,4 @@
-import { serviceValidation } from '#validators/service'
+import { serviceValidation, updateServiceValidation } from '#validators/service'
 import type { HttpContext } from '@adonisjs/core/http'
 import { create } from 'domain'
 
@@ -21,6 +21,22 @@ export default class ServiceController {
     } catch (error) {
       return response.internalServerError({
         message: 'une erreur est survenu lors de la création du service',
+      })
+    }
+  }
+
+  async update({ auth, params, request, response }: HttpContext) {
+    const user = auth.getUserOrFail()
+
+    const payload = await request.validateUsing(updateServiceValidation)
+    const service = await user.related('services').query().where('id', params.id).firstOrFail()
+
+    try {
+      await service.merge(payload).save()
+      return response.ok(service)
+    } catch (error) {
+      return response.internalServerError({
+        message: 'une erreur est survenue lors de la mise à jour du service',
       })
     }
   }
