@@ -7,7 +7,6 @@ import User from '#models/user'
 export default class Service extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
-
   @column()
   declare userId: number
   @column()
