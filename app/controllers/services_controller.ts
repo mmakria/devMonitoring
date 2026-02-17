@@ -1,7 +1,7 @@
 import { serviceValidation, updateServiceValidation } from '#validators/service'
 import type { HttpContext } from '@adonisjs/core/http'
 
-export default class ServiceController {
+export default class ServicesController {
   async index({ auth, request, response }: HttpContext) {
     const page = request.input('page')
     const services = await auth.getUserOrFail().related('services').query().paginate(page, 10)

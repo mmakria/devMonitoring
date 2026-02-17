@@ -14,7 +14,7 @@ export default class extends BaseSchema {
         .notNullable()
         .onDelete('CASCADE')
       table.integer('status_code').unsigned().notNullable()
-      table.integer('response_time').unsigned().notNullable()
+      table.float('response_time').unsigned().notNullable()
       table.text('error_message').nullable()
       table.timestamp('created_at').notNullable().defaultTo(this.now())
       table.timestamp('updated_at').notNullable().defaultTo(this.now())

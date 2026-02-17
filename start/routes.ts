@@ -11,7 +11,8 @@ import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 
 const AuthController = () => import('#controllers/auth_controller')
-const ServiceController = () => import('#controllers/service_controller')
+const ServicesController = () => import('#controllers/services_controller')
+const PingsController = () => import('#controllers/pings_controller')
 router
   .group(() => {
     // Authentification
@@ -21,10 +22,13 @@ router
     router
       .group(() => {
         router.post('/logout', [AuthController, 'logout'])
-        router.get('/services', [ServiceController, 'index'])
-        router.delete('/services/:id', [ServiceController, 'destroy'])
-        router.post('services', [ServiceController, 'store'])
-        router.patch('services/:id', [ServiceController, 'update'])
+        router.get('/services', [ServicesController, 'index'])
+        router.delete('/services/:id', [ServicesController, 'destroy'])
+        router.post('services', [ServicesController, 'store'])
+        router.patch('services/:id', [ServicesController, 'update'])
+
+        // pings
+        router.post('/pings/services/:serviceId', [PingsController, 'ttfbLatency'])
       })
       .use(middleware.auth())
   })
