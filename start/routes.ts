@@ -30,6 +30,7 @@ router
         // pings
         router.post('/pings/services/:serviceId', [PingsController, 'ttfbLatency'])
         router.get('/pings/services/:serviceId', [PingsController, 'index'])
+        router.get('/pings/services/:serviceId/pings/stats', [PingsController, 'statsLatency'])
       })
       .use(middleware.auth())
   })

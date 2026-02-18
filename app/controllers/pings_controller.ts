@@ -28,7 +28,6 @@ export default class PingsController {
       .firstOrFail()
 
     const start = performance.now()
-
     try {
       const fetchResponse = await fetch(service.url, {
         method: 'GET',
@@ -62,5 +61,36 @@ export default class PingsController {
       })
       return response.serviceUnavailable({ data: 'Service unreachable' })
     }
+  }
+
+  async statsLatency({ auth, response, params }: HttpContext) {
+    const user = auth.getUserOrFail()
+
+    const service = await user
+      .related('services')
+      .query()
+      .where('id', params.serviceId)
+      .firstOrFail()
+
+    const stats = await service
+      .related('pings')
+      .query()
+      .avg('response_time as avg')
+      .min('response_time as min')
+      .max('response_time as max')
+      .first()
+
+    // id           → undefined → ignoré
+    // statusCode   → undefined → ignoré
+    // responseTime → undefined → ignoré
+    // $extras      → { avg: 245, min: 12, max: 5000 } → ignoré aussi
+
+    return response.ok({
+      data: {
+        avg: Number(stats?.$extras.avg),
+        min: Number(stats?.$extras.min),
+        max: Number(stats?.$extras.max),
+      },
+    })
   }
 }
