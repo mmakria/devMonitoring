@@ -21,6 +21,9 @@ router
 
     router
       .group(() => {
+        //profile
+        router.get('/profile', [AuthController, 'profile'])
+
         router.post('/logout', [AuthController, 'logout'])
         router.get('/services', [ServicesController, 'index'])
         router.delete('/services/:id', [ServicesController, 'destroy'])
